@@ -1,42 +1,28 @@
-from typing import List, ContextManager
+from typing import ContextManager
 from contextlib import contextmanager
 
-from sqlalchemy import Integer, Column, String, ForeignKey, create_engine
-from sqlalchemy.orm import relationship, sessionmaker, Session
+from sqlalchemy import Integer, Column, create_engine, Float
+from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.dialects.sqlite import JSON
 
 Base = declarative_base()
-
-
-class User(Base):
-    __tablename__ = 'users'
-
-    id = Column(Integer, primary_key=True)
-    username = Column(String, unique=True)
-    password_hash = Column(String)
-    token = Column(String, nullable=True)
-    normal_threshold = Column(Integer)
-    warning_threshold = Column(Integer)
-
-    measurements: List['Measurement'] = relationship(
-        'Measurement',
-        back_populates='user',
-        cascade='all, delete'
-    )
 
 
 class Measurement(Base):
     __tablename__ = 'measurements'
 
     id = Column(Integer, primary_key=True)
-    time = Column(Integer)
-    value = Column(String)
+    user_id = Column(Integer, nullable=False)
+    words = Column(JSON, nullable=False)
+    said_words = Column(JSON, nullable=False)
+    timings = Column(JSON, nullable=False)
+    accuracy = Column(Float, nullable=False)
+    wps = Column(Float, nullable=False)
+    sps = Column(Float, nullable=False)
 
-    user_id = Column(Integer, ForeignKey('users.id'))
-    user = relationship('User', back_populates='measurements')
 
-
-engine = create_engine('sqlite:///db.db', echo=True)
+engine = create_engine('sqlite:///db.db')
 Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
