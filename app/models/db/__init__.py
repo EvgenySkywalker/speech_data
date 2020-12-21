@@ -23,7 +23,7 @@ class Measurement(Base):
     sps = Column(Float, nullable=False)
 
 
-engine = create_engine(settings.PGSQL, echo=True)
+engine = create_engine(settings.PGSQL)
 Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
