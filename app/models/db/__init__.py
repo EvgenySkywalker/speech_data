@@ -1,6 +1,7 @@
 from typing import ContextManager
 from contextlib import contextmanager
 
+from app.core.settings import settings
 from sqlalchemy import Integer, Column, create_engine, Float
 from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.ext.declarative import declarative_base
@@ -22,7 +23,7 @@ class Measurement(Base):
     sps = Column(Float, nullable=False)
 
 
-engine = create_engine('sqlite:///db.db')
+engine = create_engine(settings.PGSQL, echo=True)
 Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
