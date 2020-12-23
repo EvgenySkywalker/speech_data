@@ -11,7 +11,7 @@ Base = declarative_base()
 
 
 class Measurement(Base):
-    __tablename__ = 'measurements'
+    __tablename__ = 'measurements_7'
 
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, nullable=False)
